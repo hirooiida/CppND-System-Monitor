@@ -13,14 +13,14 @@ using std::vector;
 // TODO: Return this process's ID
 int Process::Pid() { return pid_; }
 
-// TODO: Return this process's CPU utilization
+// DONE: Return this process's CPU utilization
 float Process::CpuUtilization() { return LinuxParser::CpuUtilization(pid_); }
 
 // TODO: Return the command that generated this process
 string Process::Command() { return string(); }
 
-// TODO: Return this process's memory utilization
-string Process::Ram() { return string(); }
+// DONE: Return this process's memory utilization
+string Process::Ram() { return LinuxParser::Ram(pid_); }
 
 // TODO: Return the user (name) that generated this process
 string Process::User() { return string(); }
