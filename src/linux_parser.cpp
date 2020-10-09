@@ -4,12 +4,16 @@
 #include <vector>
 #include <sstream>
 
+#include <iostream>
+
 #include "linux_parser.h"
 
 using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
+
+constexpr long hertz = 100.0;
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -123,6 +127,44 @@ long LinuxParser::IdleJiffies() { return 0; }
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { return {}; }
 
+// TODO: Refactoring is needed
+float LinuxParser::CpuUtilization(int pid) {
+  float cpu_utilization;
+
+  string n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13;
+  string utime, stime, cutime, cstime;
+  string n18, n19, n20, n21;
+  string starttime, rest;
+    
+  string uptime, idletime;
+  string line;
+  std::ifstream stream(kProcDirectory + kUptimeFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    linestream >> uptime >> idletime;
+  }
+  
+  string statline;
+  std::ifstream statstream(kProcDirectory + to_string(pid) + kStatFilename);
+  if (statstream.is_open()) {
+    std::getline(statstream, statline);
+    std::istringstream statlinestream(statline);
+    statlinestream >> n1 >> n2 >> n3 >> n4 >> n5 >> n6 >> n7 >> n8 >> n9 >> n10 >> n11 >> n12 >> n13
+                  >> utime >> stime >> cutime >> cstime
+                  >> n18 >> n19 >> n20 >> n21
+                  >> starttime >> rest;
+  }
+ 
+  long total_time = std::stol(utime) + std::stol(stime);
+  total_time = std::stol(cutime) + std::stol(cstime);
+  float seconds = std::stol(uptime) - std::stol(starttime) / hertz;
+  
+  cpu_utilization = (total_time / hertz) / seconds;
+
+  return cpu_utilization;
+}
+
 // TODO: Read and return the total number of processes
 int LinuxParser::TotalProcesses() { 
   string line;
@@ -146,7 +188,7 @@ int LinuxParser::TotalProcesses() {
   return 0 ;
 }
 
-// TODO: Read and return the number of running processes
+// DONE: Read and return the number of running processes
 int LinuxParser::RunningProcesses() { 
   string line;
   string key;
