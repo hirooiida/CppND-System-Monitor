@@ -17,14 +17,25 @@ using std::vector;
 // TODO: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
-// TODO: Return a container composed of the system's processes
+// DONE: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
   vector<int> pids = LinuxParser::Pids();
+  
+  processes_.clear();
   
   for (const int& pid : pids) {
     Process process(pid);
     processes_.push_back(process);
   }
+  
+  vector<Process>& tmp_processes = processes_;
+  
+  sort(tmp_processes.begin(), tmp_processes.end(),
+         []( Process& pa,  Process& pb) {
+         return (pb.CpuUtilization() < pa.CpuUtilization()); } );
+  
+  processes_ = tmp_processes;
+  
   return processes_;
 }
 
