@@ -28,13 +28,7 @@ vector<Process>& System::Processes() {
     processes_.push_back(process);
   }
   
-  vector<Process>& tmp_processes = processes_;
-  
-  sort(tmp_processes.begin(), tmp_processes.end(),
-         []( Process& pa,  Process& pb) {
-         return (pb.CpuUtilization() < pa.CpuUtilization()); } );
-  
-  processes_ = tmp_processes;
+  sort(processes_.begin(), processes_.end(), std::greater<Process>());
   
   return processes_;
 }

@@ -129,7 +129,7 @@ vector<string> LinuxParser::CpuUtilization() { return {}; }
 
 // TODO: Refactoring is needed
 float LinuxParser::CpuUtilization(int pid) {
-  float cpu_utilization;
+  float cpu_utilization = 0;
 
   string n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13;
   string utime, stime, cutime, cstime;
