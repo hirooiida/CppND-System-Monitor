@@ -40,15 +40,15 @@ string LinuxParser::OperatingSystem() {
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::Kernel() {
-  string os, kernel;
+  string os, kernel, version, build;
   string line;
   std::ifstream stream(kProcDirectory + kVersionFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
     std::istringstream linestream(line);
-    linestream >> os >> kernel;
+    linestream >> os >> kernel >> version >> build;
   }
-  return kernel;
+  return version;
 }
 
 // BONUS: Update this to use std::filesystem
@@ -154,13 +154,13 @@ float LinuxParser::CpuUtilization(int pid) {
                   >> utime >> stime >> cutime >> cstime
                   >> n18 >> n19 >> n20 >> n21
                   >> starttime >> rest;
-  }
- 
-  long total_time = std::stol(utime) + std::stol(stime);
-  total_time = std::stol(cutime) + std::stol(cstime);
-  float seconds = std::stol(uptime) - std::stol(starttime) / hertz;
+
+    long total_time = std::stol(utime) + std::stol(stime);
+    total_time = std::stol(cutime) + std::stol(cstime);
+    float seconds = std::stol(uptime) - std::stol(starttime) / hertz;
   
-  cpu_utilization = (total_time / hertz) / seconds;
+    cpu_utilization = (total_time / hertz) / seconds;
+  }
 
   return cpu_utilization;
 }
